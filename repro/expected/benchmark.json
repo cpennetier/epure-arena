@@ -1,0 +1,72 @@
+[
+ {
+  "certified_planned": 9977,
+  "certify_digest": "a6f2841484eddc23",
+  "demand": 10000,
+  "deterministic": true,
+  "events_processed": 89298,
+  "greedy_delivered": 9974,
+  "greedy_on_time": 9974,
+  "greedy_stranded": 26,
+  "guaranteed_on_time": 9977,
+  "replay_identical": true,
+  "seed": 42,
+  "world_digest": "c915b1165ddd8785"
+ },
+ {
+  "certified_planned": 29939,
+  "certify_digest": "fa87af466cd3e79f",
+  "demand": 30000,
+  "deterministic": true,
+  "events_processed": 266066,
+  "greedy_delivered": 29939,
+  "greedy_on_time": 29939,
+  "greedy_stranded": 61,
+  "guaranteed_on_time": 29939,
+  "replay_identical": true,
+  "seed": 42,
+  "world_digest": "85dc4e2220e49336"
+ },
+ {
+  "certified_planned": 99807,
+  "certify_digest": "900a6a90fc9b2042",
+  "demand": 100000,
+  "deterministic": true,
+  "events_processed": 885595,
+  "greedy_delivered": 99807,
+  "greedy_on_time": 99807,
+  "greedy_stranded": 193,
+  "guaranteed_on_time": 99807,
+  "replay_identical": true,
+  "seed": 42,
+  "world_digest": "2719b4e6cf8c0a13"
+ },
+ {
+  "certified_planned": 299432,
+  "certify_digest": "6fd9ea4f06c5b10e",
+  "demand": 300000,
+  "deterministic": true,
+  "events_processed": 2656789,
+  "greedy_delivered": 299432,
+  "greedy_on_time": 299432,
+  "greedy_stranded": 568,
+  "guaranteed_on_time": 299432,
+  "replay_identical": true,
+  "seed": 42,
+  "world_digest": "bcc7551e78f330a7"
+ },
+ {
+  "certified_planned": 998154,
+  "certify_digest": "15ad900aeca61ca7",
+  "demand": 1000000,
+  "deterministic": true,
+  "events_processed": 8855911,
+  "greedy_delivered": 998154,
+  "greedy_on_time": 998154,
+  "greedy_stranded": 1846,
+  "guaranteed_on_time": 998154,
+  "replay_identical": true,
+  "seed": 42,
+  "world_digest": "da8e8f3ab85deb2b"
+ }
+]

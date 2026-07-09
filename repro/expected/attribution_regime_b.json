@@ -1,0 +1,44 @@
+[
+ {
+  "attribution": {
+   "ALGO_CAPACITY_MYOPIA": 5352,
+   "ALGO_DEADEND": 4033,
+   "ENVELOPE_CLIFF": 84,
+   "ENVELOPE_DEADLINE": 0,
+   "ENVELOPE_DEMAND_SURGE": 0,
+   "ENVELOPE_SHOCK": 0,
+   "PLAN_FIDELITY_DIVERGENCE": 0,
+   "R1": 0,
+   "R2": 84,
+   "R3": 9385,
+   "WORLD_CAPACITY_SHORTFALL": 0,
+   "WORLD_STRUCTURAL": 0
+  },
+  "by_reason": {
+   "cap": 5352,
+   "sched": 4117
+  },
+  "cadence": "hourly",
+  "capacity": "tight",
+  "delivered": 30531,
+  "demand": 40000,
+  "density": "moderate",
+  "enforce_capacity": true,
+  "horizon": 24,
+  "injected": 40000,
+  "nodes": 200,
+  "pattern": "diurnal",
+  "sched_deadline_bound": 0,
+  "sched_genuine_cliff": 84,
+  "sched_genuine_structural": 0,
+  "sched_router_induced": 4033,
+  "schema_fingerprint": "0d0082854fc4a5ad",
+  "seed": 42,
+  "site_of_sched": {
+   "RouterNone": 4117
+  },
+  "strand_pct": 23.7,
+  "stranded": 9469,
+  "topology": "backbone"
+ }
+]

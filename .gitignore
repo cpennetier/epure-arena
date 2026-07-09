@@ -1,0 +1,20 @@
+target/
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+dist/
+build/
+runs/
+.pytest_cache/
+.hypothesis/
+uv.lock
+*.so
+.DS_Store
+
+# internal working docs — kept on disk, excluded from the public tree
+docs/notebook.md
+docs/SESSION_CONTEXT.md
+PUBLICATION-CHECKLIST.md
+__pycache__/
+*.pyc

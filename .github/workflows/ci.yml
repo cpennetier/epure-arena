@@ -1,0 +1,40 @@
+name: CI
+on:
+  push: { branches: [main] }
+  pull_request:
+  schedule:
+    - cron: "0 4 * * 1"   # weekly reproduce-paper
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-python@v6
+        with: { python-version: "3.12" }
+      - name: Rust suites
+        run: |
+          cargo test --no-default-features --manifest-path crates/epure-des/Cargo.toml --lib
+          cargo test --no-default-features --features arrow_only --manifest-path crates/epure-ledger/Cargo.toml
+          cargo test --no-default-features --features arrow_only --manifest-path crates/epure-fsm/Cargo.toml
+      - name: Python package
+        run: |
+          pip install maturin
+          pip install -e ".[oracle,dev]"
+      - name: Invariants (neutrality, dependency direction)
+        run: pytest tests/test_no_domain_vocabulary.py tests/test_dependency_direction.py -q
+      - name: Core suite + golden worlds
+        run: pytest tests -q
+      - name: reproduce-smoke (byte-asserted)
+        run: make reproduce-smoke
+  reproduce-paper:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 420
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-python@v6
+        with: { python-version: "3.12" }
+      - run: pip install maturin && pip install -e ".[oracle,dev]"
+      - run: make reproduce-paper

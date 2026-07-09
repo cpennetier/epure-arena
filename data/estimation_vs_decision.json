@@ -1,0 +1,29 @@
+{
+  "provenance": {
+    "source_run_id": "gate-experiment-partA-20260611T142140Z-89759584",
+    "raw_run_folder": "absent (gitignored) — this is a committed neutral extract of the run-folder metrics, NOT a from-zero re-derivation",
+    "sklearn_note": "Ridge alpha=1.0; HistGradientBoostingRegressor random_state=0. The gbt arm is not byte-stable across sklearn versions, which is exactly why this extract is committed rather than regenerated (the byte-asserted reproduction therefore needs no sklearn)."
+  },
+  "estimator_mae": {
+    "n_rows": 1080,
+    "n_train": 360,
+    "per_estimator_mean_mae": {
+      "analytic": 116.95,
+      "gbt": 37.375,
+      "ridge": 43.8
+    },
+    "per_kind": [
+      {"kind": "lane_outage",    "n": 180, "analytic_mae": 8.0,   "gbt_mae": 5.3,   "ridge_mae": 18.7, "mean_externality": 8.0,   "mean_slack": 136.1},
+      {"kind": "node_outage",    "n": 180, "analytic_mae": 22.9,  "gbt_mae": 10.1,  "ridge_mae": 18.6, "mean_externality": 22.9,  "mean_slack": 320.3},
+      {"kind": "capacity_shock", "n": 180, "analytic_mae": 8.0,   "gbt_mae": 3.3,   "ridge_mae": 14.7, "mean_externality": 8.0,   "mean_slack": 91.5},
+      {"kind": "demand_surge",   "n": 180, "analytic_mae": 428.9, "gbt_mae": 130.8, "ridge_mae": 123.2, "mean_externality": 428.9, "mean_slack": 0}
+    ]
+  },
+  "ranking_regret": {
+    "n_suites": 72,
+    "analytic": {"k1_mean": 82.6,  "k1_sd": 203.5, "k2_mean": 0, "k2_sd": 0.0, "k4_mean": 11.2, "k4_sd": 32.5},
+    "hist_gbt": {"k1_mean": 103.5, "k1_sd": 210.5, "k2_mean": 0, "k2_sd": 0.0, "k4_mean": 10.3, "k4_sd": 32.4},
+    "ridge":    {"k1_mean": 82.6,  "k1_sd": 203.5, "k2_mean": 0, "k2_sd": 0.0, "k4_mean": 9,    "k4_sd": 33.7},
+    "severity": {"k1_mean": 164.6, "k1_sd": 248.9, "k2_mean": 0, "k2_sd": 0.0, "k4_mean": 18.4, "k4_sd": 53.9}
+  }
+}

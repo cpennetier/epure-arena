@@ -1,0 +1,335 @@
+{
+ "admission_steep_hard": {
+  "aggregate": {
+   "R_raw_S": {
+    "ci": [
+     38.05419968888814,
+     119.44825909590045
+    ],
+    "ci95_half": 40.69702970350615,
+    "excludes_zero": true,
+    "mean": 78.7512293923943
+   },
+   "R_wait_S": {
+    "ci": [
+     8.077874060972373,
+     19.45368832132682
+    ],
+    "ci95_half": 5.687907130177223,
+    "excludes_zero": true,
+    "mean": 13.765781191149596
+   },
+   "own_wait_S": {
+    "ci": [
+     27.374586534393757,
+     102.59630986809563
+    ],
+    "ci95_half": 37.61086166685094,
+    "excludes_zero": true,
+    "mean": 64.9854482012447
+   }
+  },
+  "rows": [
+   {
+    "R_raw_S": 117.64836676496438,
+    "R_wait_S": 13.544742979377986,
+    "V_gw": 239.86609683668837,
+    "V_oracle": 253.41083981606636,
+    "V_raw": 135.76247305110198,
+    "control_max_delta": 0.0,
+    "n_committed": {
+     "gw": 106,
+     "o": 106,
+     "raw": 120
+    },
+    "n_control": 0,
+    "oracle_certified": true,
+    "ordering_ok": true,
+    "own_wait_S": 104.1036237855864,
+    "roundtrips": {
+     "greedy_raw": true,
+     "greedy_wait": true,
+     "oracle": true
+    },
+    "seed": 42
+   },
+   {
+    "R_raw_S": 106.59669526540625,
+    "R_wait_S": 21.43304107223034,
+    "V_gw": 243.75759036364596,
+    "V_oracle": 265.1906314358763,
+    "V_raw": 158.59393617047004,
+    "control_max_delta": 0.0,
+    "n_committed": {
+     "gw": 102,
+     "o": 114,
+     "raw": 119
+    },
+    "n_control": 0,
+    "oracle_certified": true,
+    "ordering_ok": true,
+    "own_wait_S": 85.16365419317592,
+    "roundtrips": {
+     "greedy_raw": true,
+     "greedy_wait": true,
+     "oracle": true
+    },
+    "seed": 43
+   },
+   {
+    "R_raw_S": 74.05012984820408,
+    "R_wait_S": 10.075795782297234,
+    "V_gw": 222.14936127798802,
+    "V_oracle": 232.22515706028526,
+    "V_raw": 158.17502721208118,
+    "control_max_delta": 0.0,
+    "n_committed": {
+     "gw": 106,
+     "o": 111,
+     "raw": 119
+    },
+    "n_control": 3,
+    "oracle_certified": true,
+    "ordering_ok": true,
+    "own_wait_S": 63.974334065906845,
+    "roundtrips": {
+     "greedy_raw": true,
+     "greedy_wait": true,
+     "oracle": true
+    },
+    "seed": 44
+   },
+   {
+    "R_raw_S": 42.09736009773516,
+    "R_wait_S": 10.394647689592261,
+    "V_gw": 244.21130647035454,
+    "V_oracle": 254.6059541599468,
+    "V_raw": 212.50859406221164,
+    "control_max_delta": 0.0,
+    "n_committed": {
+     "gw": 108,
+     "o": 112,
+     "raw": 119
+    },
+    "n_control": 1,
+    "oracle_certified": true,
+    "ordering_ok": true,
+    "own_wait_S": 31.7027124081429,
+    "roundtrips": {
+     "greedy_raw": true,
+     "greedy_wait": true,
+     "oracle": true
+    },
+    "seed": 45
+   },
+   {
+    "R_raw_S": 53.36359498566159,
+    "R_wait_S": 13.380678432250164,
+    "V_gw": 219.33524050374268,
+    "V_oracle": 232.71591893599285,
+    "V_raw": 179.35232395033125,
+    "control_max_delta": 0.0,
+    "n_committed": {
+     "gw": 108,
+     "o": 109,
+     "raw": 118
+    },
+    "n_control": 0,
+    "oracle_certified": true,
+    "ordering_ok": true,
+    "own_wait_S": 39.98291655341143,
+    "roundtrips": {
+     "greedy_raw": true,
+     "greedy_wait": true,
+     "oracle": true
+    },
+    "seed": 46
+   }
+  ],
+  "scope": "ILP-certifiable scale (grid n12/d120, HiGHS), controlled bottleneck (knob rho=2.0); COMMITTED ADMISSION MODEL: each policy plans ex-ante on the full world, then only its committed S runs (one shared demand filter, asserted exact per policy); theta = STEEP_SCARCE (hard tol)",
+  "seeds": [
+   42,
+   43,
+   44,
+   45,
+   46
+  ],
+  "verdict": "INFLICTED-WAIT EXTERNALITY AT MAXIMUM STEEPNESS (admission) CONFIRMED"
+ },
+ "full_system_s075": {
+  "aggregate": {
+   "R_raw_S": {
+    "ci": [
+     12.660606986060092,
+     37.67762780419132
+    ],
+    "ci95_half": 12.508510409065611,
+    "excludes_zero": true,
+    "mean": 25.169117395125703
+   },
+   "R_raw_full": {
+    "ci": [
+     12.823404684960849,
+     36.81804153547506
+    ],
+    "ci95_half": 11.997318425257106,
+    "excludes_zero": true,
+    "mean": 24.820723110217955
+   },
+   "R_wait_S": {
+    "ci": [
+     5.430867167265457,
+     13.827867385366812
+    ],
+    "ci95_half": 4.198500109050678,
+    "excludes_zero": true,
+    "mean": 9.629367276316135
+   },
+   "R_wait_full": {
+    "ci": [
+     1.4553588470937484,
+     27.718367600700184
+    ],
+    "ci95_half": 13.131504376803218,
+    "excludes_zero": true,
+    "mean": 14.586863223896966
+   },
+   "own_wait_recoverable_full": {
+    "ci": [
+     -4.744989658948109,
+     25.212709431590085
+    ],
+    "ci95_half": 14.978849545269098,
+    "excludes_zero": false,
+    "mean": 10.233859886320989
+   }
+  },
+  "rows": [
+   {
+    "R_raw_S": 35.7020448959309,
+    "R_raw_full": 35.7020448959309,
+    "R_wait_S": 13.447650875172712,
+    "R_wait_full": 16.204847758829146,
+    "gw_S": 311.1419143989795,
+    "gw_full": 308.3847175153231,
+    "n_committed": {
+     "gw": 116,
+     "o": 120,
+     "raw": 120
+    },
+    "o_S": 324.5895652741522,
+    "o_full": 324.5895652741522,
+    "oracle_certified": true,
+    "ordering_ok_S": true,
+    "own_wait_recoverable_full": 19.49719713710175,
+    "raw_S": 288.8875203782213,
+    "raw_full": 288.8875203782213,
+    "roundtrip_ok": true,
+    "seed": 42
+   },
+   {
+    "R_raw_S": 35.19787911462811,
+    "R_raw_full": 33.45590769008936,
+    "R_wait_S": 12.77885570316829,
+    "R_wait_full": 11.036884278629543,
+    "gw_S": 325.0856921935583,
+    "gw_full": 325.0856921935583,
+    "n_committed": {
+     "gw": 119,
+     "o": 119,
+     "raw": 119
+    },
+    "o_S": 337.8645478967266,
+    "o_full": 336.12257647218786,
+    "oracle_certified": true,
+    "ordering_ok_S": true,
+    "own_wait_recoverable_full": 22.41902341145982,
+    "raw_S": 302.6666687820985,
+    "raw_full": 302.6666687820985,
+    "roundtrip_ok": true,
+    "seed": 43
+   },
+   {
+    "R_raw_S": 23.834102039457548,
+    "R_raw_full": 23.834102039457548,
+    "R_wait_S": 8.342643012525741,
+    "R_wait_full": 32.11489729131222,
+    "gw_S": 283.504498939695,
+    "gw_full": 259.7322446609085,
+    "n_committed": {
+     "gw": 118,
+     "o": 119,
+     "raw": 119
+    },
+    "o_S": 291.84714195222074,
+    "o_full": 291.84714195222074,
+    "oracle_certified": true,
+    "ordering_ok_S": true,
+    "own_wait_recoverable_full": -8.28079525185467,
+    "raw_S": 268.0130399127632,
+    "raw_full": 268.0130399127632,
+    "roundtrip_ok": true,
+    "seed": 44
+   },
+   {
+    "R_raw_S": 13.563560115895541,
+    "R_raw_full": 13.563560115895541,
+    "R_wait_S": 5.474044830762239,
+    "R_wait_full": 5.474044830762239,
+    "gw_S": 320.14408720424683,
+    "gw_full": 320.14408720424683,
+    "n_committed": {
+     "gw": 119,
+     "o": 119,
+     "raw": 119
+    },
+    "o_S": 325.61813203500907,
+    "o_full": 325.61813203500907,
+    "oracle_certified": true,
+    "ordering_ok_S": true,
+    "own_wait_recoverable_full": 8.089515285133302,
+    "raw_S": 312.0545719191135,
+    "raw_full": 312.0545719191135,
+    "roundtrip_ok": true,
+    "seed": 45
+   },
+   {
+    "R_raw_S": 17.548000809716427,
+    "R_raw_full": 17.548000809716427,
+    "R_wait_S": 8.103641959951688,
+    "R_wait_full": 8.103641959951688,
+    "gw_S": 291.85759206730876,
+    "gw_full": 291.85759206730876,
+    "n_committed": {
+     "gw": 118,
+     "o": 118,
+     "raw": 118
+    },
+    "o_S": 299.96123402726045,
+    "o_full": 299.96123402726045,
+    "oracle_certified": true,
+    "ordering_ok_S": true,
+    "own_wait_recoverable_full": 9.44435884976474,
+    "raw_S": 282.413233217544,
+    "raw_full": 282.413233217544,
+    "roundtrip_ok": true,
+    "seed": 46
+   }
+  ],
+  "scope": "ILP-certifiable scale (grid n12/d120, HiGHS), controlled bottleneck (knob rho=2.0); greedy-raw = CapacityAwarePlanner(value_weighted); greedy-wait = sequential own-wait-adjusted marginals at the same seam; oracle = P1a conservative wait-pricing ILP",
+  "seeds": [
+   42,
+   43,
+   44,
+   45,
+   46
+  ],
+  "theta": {
+   "a": 0.0175,
+   "b": 0.05097132734541368,
+   "s": 0.75,
+   "tol_atu": 2368933
+  },
+  "verdict": "INFLICTED-WAIT EXTERNALITY CONFIRMED \u2014 learning justified"
+ }
+}

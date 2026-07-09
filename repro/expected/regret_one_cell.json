@@ -1,0 +1,41 @@
+[
+ {
+  "cell": "backbone/hourly/tight",
+  "greedy_delivered": 14386,
+  "greedy_on_time": 11875,
+  "greedy_on_time_units": 35137.0,
+  "greedy_regret_units_vs_oracle": 24918.0,
+  "guaranteed_on_time": 15328,
+  "lattice_ok": true,
+  "lp_status": "optimal",
+  "lp_ub_units": 58631.0,
+  "n": 20000,
+  "n_planned": 15328,
+  "opportunistic_late": 425,
+  "opportunistic_on_time": 0,
+  "oracle_ub_flow_units": 19960,
+  "oracle_ub_units": 60055.0,
+  "planner_delivered": 15753,
+  "planner_on_time": 15328,
+  "planner_on_time_units": 44300.0,
+  "planner_reasons": {
+   "CAPACITY_BLOCKED": 4632,
+   "ENVELOPE_CLIFF": 40
+  },
+  "policy": "slack_first",
+  "refused_stranded": {
+   "CAPACITY_BLOCKED": 4207,
+   "ENVELOPE_CLIFF": 40
+  },
+  "regret_units_vs_lp": 14331.0,
+  "regret_units_vs_oracle": 15755.0,
+  "repack_stats": {
+   "exchanges_accepted": 0,
+   "exchanges_attempted": 0,
+   "extra_searches": 0
+  },
+  "schema_fingerprint": "0d0082854fc4a5ad",
+  "seed": 42,
+  "vip_guaranteed": 1533
+ }
+]

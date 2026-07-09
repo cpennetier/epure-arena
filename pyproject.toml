@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "epure-arena"
+version = "0.1.0"
+description = "A deterministic, certificate-driven decision-quality engine for constrained dynamic systems"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.11"
+authors = [{ name = "Christophe Pennetier" }]
+dependencies = [
+    # the time-and-truth runtime: event queue, clock, deterministic replay,
+    # ledgers, run manifests. Compiled engine ships as `ephemeris._engine`;
+    # re-exported here as `epure_arena._engine`.
+    "ephemeris-kernel @ git+https://github.com/cpennetier/ephemeris-kernel@v0.1.0",
+    "numpy>=1.24",
+    "pyarrow>=14.0",
+    "h3>=4.0",
+]
+
+[project.optional-dependencies]
+oracle = ["pulp>=2.7", "scipy>=1.11", "highspy>=1.5"]  # highspy: the CERTIFIED MIP backend (CBC is untrustworthy on big-M lateness)
+dev = ["pytest>=7.0", "scikit-learn>=1.3"]
+
+# the kernel pin is a git direct reference; hatchling rejects it in
+# project.dependencies unless explicitly allowed.
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["python/epure_arena"]

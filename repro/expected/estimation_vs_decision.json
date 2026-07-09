@@ -1,0 +1,123 @@
+{
+ "decision": {
+  "estimators_separate_on_decision": false,
+  "pairs_separating_beyond_noise": [],
+  "regret_with_ci95": {
+   "analytic": {
+    "k1": {
+     "ci95": 47.0,
+     "mean": 82.6
+    },
+    "k2": {
+     "ci95": 0.0,
+     "mean": 0
+    },
+    "k4": {
+     "ci95": 7.5,
+     "mean": 11.2
+    }
+   },
+   "hist_gbt": {
+    "k1": {
+     "ci95": 48.6,
+     "mean": 103.5
+    },
+    "k2": {
+     "ci95": 0.0,
+     "mean": 0
+    },
+    "k4": {
+     "ci95": 7.5,
+     "mean": 10.3
+    }
+   },
+   "ridge": {
+    "k1": {
+     "ci95": 47.0,
+     "mean": 82.6
+    },
+    "k2": {
+     "ci95": 0.0,
+     "mean": 0
+    },
+    "k4": {
+     "ci95": 7.8,
+     "mean": 9
+    }
+   },
+   "severity": {
+    "k1": {
+     "ci95": 57.5,
+     "mean": 164.6
+    },
+    "k2": {
+     "ci95": 0.0,
+     "mean": 0
+    },
+    "k4": {
+     "ci95": 12.5,
+     "mean": 18.4
+    }
+   }
+  },
+  "top2_over_determined_regret_zero": true
+ },
+ "estimation": {
+  "mae_cut_averaged_analytic_over_gbt": 3.13,
+  "mae_cut_max": {
+   "best_estimator": "ridge",
+   "kind": "demand_surge",
+   "mean_slack": 0,
+   "ratio": 3.48
+  },
+  "mean_per_kind_mae": {
+   "analytic": 116.95,
+   "gbt": 37.375,
+   "ridge": 43.8
+  },
+  "per_kind": [
+   {
+    "analytic_mae": 8.0,
+    "best_estimator": "gbt",
+    "gbt_mae": 5.3,
+    "kind": "lane_outage",
+    "mae_cut_analytic_over_best": 1.51,
+    "mean_externality": 8.0,
+    "mean_slack": 136.1,
+    "ridge_mae": 18.7
+   },
+   {
+    "analytic_mae": 22.9,
+    "best_estimator": "gbt",
+    "gbt_mae": 10.1,
+    "kind": "node_outage",
+    "mae_cut_analytic_over_best": 2.27,
+    "mean_externality": 22.9,
+    "mean_slack": 320.3,
+    "ridge_mae": 18.6
+   },
+   {
+    "analytic_mae": 8.0,
+    "best_estimator": "gbt",
+    "gbt_mae": 3.3,
+    "kind": "capacity_shock",
+    "mae_cut_analytic_over_best": 2.42,
+    "mean_externality": 8.0,
+    "mean_slack": 91.5,
+    "ridge_mae": 14.7
+   },
+   {
+    "analytic_mae": 428.9,
+    "best_estimator": "ridge",
+    "gbt_mae": 130.8,
+    "kind": "demand_surge",
+    "mae_cut_analytic_over_best": 3.48,
+    "mean_externality": 428.9,
+    "mean_slack": 0,
+    "ridge_mae": 123.2
+   }
+  ]
+ },
+ "kind": "characterization (not a headline result)",
+ "n_suites": 72
+}
