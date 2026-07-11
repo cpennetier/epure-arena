@@ -72,13 +72,13 @@ The attribution table closes with zero unexplained mass. A vague explanation suc
 
 Any policy can be evaluated by
 
-\[
+$$
 \operatorname{regret}(S_{\text{policy}})
 =
 V(S^\*)-V(S_{\text{policy}}),
-\]
+$$
 
-where \(S^\*\) is the certified reference under the same cost and budget constraints.
+where $S^*$ is the certified reference under the same cost and budget constraints.
 
 A learned component can be inserted into one declared seam without silently changing the world, reward, or another component's semantics.
 
@@ -193,9 +193,9 @@ regret = grader.budgeted_regret(env.selected_set)
 
 The environment returns plain floating-point rewards from deterministic paired replay:
 
-\[
+$$
 r_t = \Delta V_t - \text{intervention cost}.
-\]
+$$
 
 Cumulative reward telescopes to the value of the selected set. The executor is part of the environment and is never placed on a gradient path.
 
@@ -214,11 +214,11 @@ The canonical, fully scoped result index is [`RESULTS.md`](RESULTS.md). The tabl
 
 ### The decision-gap result
 
-For steepness values \(s\in[0,0.75]\), reported greedy-versus-oracle regret is
+For steepness values $s\in[0,0.75]$, reported greedy-versus-oracle regret is
 
-\[
+$$
 2.53 \rightarrow 4.52 \rightarrow 9.88 \rightarrow 24.82,
-\]
+$$
 
 with 95% confidence intervals excluding zero in the stated experiment.
 
@@ -228,8 +228,8 @@ The oracle is conservative: it over-prices the convex wait cost and searches a r
 
 The wait-blind or own-wait greedy policy leaves a residual that a single-unit marginal does not observe:
 
-- \(R_{\text{wait},S}=+9.63\,[+5.4,+13.8]\) at \(s=0.75\);
-- \(R_{\text{wait},S}=+13.77\,[+8.1,+19.5]\) in the harder admission-enforced leg.
+- $R_{\text{wait},S}=+9.63\,[+5.4,+13.8]$ at $s=0.75$;
+- $R_{\text{wait},S}=+13.77\,[+8.1,+19.5]$ in the harder admission-enforced leg.
 
 These are existence and lower-bound results under the exact scope documented in [`RESULTS.md`](RESULTS.md).
 
@@ -266,19 +266,19 @@ The engine records deterministic held-but-not-in-transit time as `held_atu`.
 
 Realized value is
 
-\[
+$$
 v_{\text{realized}}
 =
 v-C_{\text{wait}}(\text{held})-\text{late loss},
-\]
+$$
 
 with
 
-\[
+$$
 C_{\text{wait}}
 =
 v\left(a\,w+b\,w^2\right).
-\]
+$$
 
 The quadratic term is load-bearing: it makes the value of a committed set non-additive through shared capacity.
 
