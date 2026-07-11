@@ -73,7 +73,7 @@ The attribution table closes with zero unexplained mass. A vague explanation suc
 Any policy can be evaluated by
 
 $$
-\operatorname{regret}(S_{\text{policy}}) = V(S^*) - V(S_{\text{policy}})
+\mathrm{regret}(S_{\text{policy}}) = V(S^*) - V(S_{\text{policy}})
 $$
 
 where $S^*$ is the certified reference under the same cost and budget constraints.
