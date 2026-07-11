@@ -1,197 +1,384 @@
 # Epure Arena
 
-*A certified arena for measuring when intelligence is worth spending.*
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![CI](https://github.com/cpennetier/epure-arena/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/cpennetier/epure-arena/actions/workflows/ci.yml)
 
-**A certified environment for decision quality under hard constraints.**
+**A certified environment for measuring decision quality under hard constraints.**
 
-A *world* is a capacitated time-graph: flow units traverse nodes and lanes by
-boarding scheduled, capacity-limited connections. epure-arena gives you three
-things over such a world, and they are the artifact:
+> **Research program — verifiable learning and decision systems.**  
+> Proposal mechanisms may be heuristic or learned; the structures they produce, the worlds they act in, and the value they create remain independently measurable.
+>
+> **Role of this repository:** certified evaluation of decisions in constrained dynamic systems.  
+> [PatternBoost](https://github.com/cpennetier/spectral-graph-patternboost) ·
+> [Graph diffusion](https://github.com/cpennetier/spectral-graph-diffusion) ·
+> [Ephemeris Kernel](https://github.com/cpennetier/ephemeris-kernel) ·
+> [Epure Arena](https://github.com/cpennetier/epure-arena)
 
-1. **A world that replays exactly.** Same seed ⇒ byte-identical run — KPIs,
-   records, surfaces, manifest. Paired same-seed rollouts (act vs. no-op)
-   isolate the causal value of a decision with leg-level exactness.
-2. **Typed, *proven* attribution.** Every non-ideal outcome is classified by a
-   destination-rooted backward oracle as **world's-fault** (genuinely
-   infeasible / structural) or **policy's-fault** (feasible-on-time — the
-   policy refused it; or feasible-late). "The network was full" becomes a
-   theorem about the timetable, not an excuse.
-3. **Any policy graded by regret** against a certified reference. Plug a policy
-   into the environment; the harness scores it by its gap to a certified
-   oracle. A learned component swapped into one seam cannot silently change
-   another's semantics.
+## Research question
 
-**The thesis** (developed in [`docs/OVERVIEW.md`](docs/OVERVIEW.md) §3): in
-constrained dynamic systems the dominant lever is *which* flow units to commit
-or refuse and *when* to re-solve — the decision handed to the optimizer, not the
-optimizer itself. The apparatus above makes that decision measurable; the first
-result it yields — a certified **decision gap** that greedy leaves under wait
-cost — and every other result, each with its honesty label and scope, are
-indexed in [`RESULTS.md`](RESULTS.md).
+When a policy produces a better outcome, how do we know that the gain came from the decision rather than from stochastic drift, evaluator weakness, or a change in execution semantics?
 
-> **Orientation.** This is a functional README — what the thing is and how to
-> run it. The narrative paper is [`decision-quality.pdf`](decision-quality.pdf),
-> rendered separately by the Book's Typst pipeline.
+Epure makes the comparison explicit:
 
-> **Presentation.** A visual, scrollable presentation of this work — the
-> apparatus, the four proven guarantees, the measured results with their
-> honesty labels and scope, and the research frame — is at
-> <https://decision-quality-site.vercel.app/>. An evolving research program;
-> the full paper and extended notebook are in progress there.
+```text
+policy proposes a decision
+          │
+          ▼
+certifier checks feasibility and reference value
+          │
+          ▼
+deterministic world executes the decision
+          │
+          ▼
+paired counterfactual replay measures causal value
+          │
+          ▼
+policy is graded by regret against a certified reference
+```
 
-## The three layers
+The current reference world is a **capacitated time-graph**. Flow units move across nodes and lanes by boarding scheduled, capacity-limited connections.
 
-`epure-arena` is one engine in three responsibility layers (full map in
-[`ARCHITECTURE.md`](ARCHITECTURE.md)):
+The artifact is not a single planner. It is the apparatus required to answer:
 
-- **DES world** — the deterministic engine (the
-  [ephemeris-kernel](https://github.com/cpennetier/ephemeris-kernel)
-  time-and-truth runtime, re-exported as `epure_arena._engine`) + world
-  generators (`epure_arena.scenarios`).
-- **Certifier** — the feasibility oracle, certificate lattice, plan fidelity,
-  and typed reasons (`epure_arena.{harness,lattice}`, `optimize/fidelity.py`,
-  `reasons.py`).
-- **Agents** — the planner ABC + reference planners and the declared seams
-  (`epure_arena.optimize`, `epure_arena.env`, and `gate/propose/imagine/navigate`).
+- What physically happened?
+- Was a bad outcome avoidable?
+- Which layer owns the failure?
+- What was the decision worth?
+- How far is a policy from a certified reference?
 
-The dependency arrow points one way: **core never imports an adapter**
-(enforced by `tests/test_dependency_direction.py`), and carries **no domain
-vocabulary** (enforced by `tests/test_no_domain_vocabulary.py`).
+## Three guarantees
+
+### 1. Exact replay
+
+The same seed and inputs produce a byte-identical run on the supported platform:
+
+- KPIs;
+- event and outcome records;
+- Arrow surfaces;
+- run manifest.
+
+Paired same-seed rollouts—action versus no-op—therefore isolate the causal value of a decision without simulator noise.
+
+### 2. Typed, proven attribution
+
+A destination-rooted backward oracle classifies non-ideal outcomes as:
+
+- **world-caused:** no feasible path exists under the stated envelope;
+- **policy-caused:** an on-time or late feasible path existed, but the policy did not realize it.
+
+The attribution table closes with zero unexplained mass. A vague explanation such as “capacity was unavailable” becomes a checkable statement about the time-graph.
+
+### 3. Regret against a certified reference
+
+Any policy can be evaluated by
+
+\[
+\operatorname{regret}(S_{\text{policy}})
+=
+V(S^\*)-V(S_{\text{policy}}),
+\]
+
+where \(S^\*\) is the certified reference under the same cost and budget constraints.
+
+A learned component can be inserted into one declared seam without silently changing the world, reward, or another component's semantics.
+
+## Thesis and current result
+
+The research thesis is that, in constrained dynamic systems, the high-value question is often **which units to commit or refuse, and when to reconsider the decision**—not merely which low-level optimizer is used after the decision boundary has already been chosen.
+
+The repository does not present that thesis as a universal theorem.
+
+What it establishes now is narrower and stronger:
+
+> Under a controlled bottleneck with convex wait cost, a natural greedy policy leaves a positive oracle-certified decision gap, and part of that gap comes from waiting imposed on units committed later—an externality that a single-unit marginal cannot see.
+
+Every result is indexed with an honesty label, scope, and reproduction command in [`RESULTS.md`](RESULTS.md).
+
+> **Orientation.** This README explains what the artifact is and how to run it.  
+> The longer research narrative is [`decision-quality.pdf`](decision-quality.pdf).  
+> The arena's first published study is the coordination-frontier note:
+> [`experiments/coordination-frontier/coordination-frontier.pdf`](experiments/coordination-frontier/coordination-frontier.pdf).
+>
+> **Presentation.** **[PLACEHOLDER — insert the confirmed public presentation URL here. Do not remove this block without replacing it.]**
+
+## Architecture
+
+Epure has three responsibility layers. The full directory-level map is in [`ARCHITECTURE.md`](ARCHITECTURE.md).
+
+| Layer | Question | Implementation |
+|---|---|---|
+| **Deterministic world** | What physically happened? | [`ephemeris-kernel`](https://github.com/cpennetier/ephemeris-kernel), `epure_arena.scenarios`, `epure_arena.world` |
+| **Certifier** | Was the outcome avoidable, and what proves the attribution? | `epure_arena.harness`, `epure_arena.lattice`, `reasons.py`, `optimize/fidelity.py` |
+| **Agent seams** | What should be committed, and what was it worth? | `optimize`, `env`, `gate`, `propose`, `imagine`, `navigate` |
+
+The dependency direction is intentional:
+
+```text
+agent seams
+    │
+    ▼
+certifier and evaluation harness
+    │
+    ▼
+deterministic world
+```
+
+Core never imports a downstream adapter. This is enforced by `tests/test_dependency_direction.py`.
+
+## What “certified” means here
+
+“Certified” does not mean that every optimization problem is solved globally under every possible model.
+
+It means that a stated quantity is attached to an explicit proof or invariant:
+
+- **Exact replay:** byte-identity tests and committed golden worlds.
+- **Feasibility attribution:** a backward oracle over the time-graph.
+- **Plan fidelity:** pinned execution with a three-way guaranteed/opportunistic/refused split.
+- **Mass closure:** every flow unit is accounted for or the run fails.
+- **Wait-cost coherence:** planner reconstruction, engine-held time, and oracle value agree at pinned times.
+- **Conservative oracle:** the wait-pricing ILP reports a lower bound on realized value, so a positive measured gap cannot be inflated by the oracle.
+- **Regret:** a policy is compared under the same environment, cost, and budget.
+
+The scope of each certificate is stated beside the result.
 
 ## Quick start
 
 ```bash
-# pure Python; the compiled engine arrives via the ephemeris-kernel
-# dependency (needs a Rust toolchain — pip builds it automatically)
+git clone https://github.com/cpennetier/epure-arena.git
+cd epure-arena
+
 pip install -e ".[oracle,dev]"
-make reproduce-smoke    # anchor results, byte-asserted against committed tables
+make reproduce-smoke
 ```
 
-## Run it
+`make reproduce-smoke` is the fast end-to-end anchor. It reruns committed cells and exits successfully only when deterministic fields match the golden tables.
 
-| command | what it does |
+## Run the artifact
+
+| Command | Purpose |
 |---|---|
-| `make test` | Rust suites + Python suite (golden worlds, invariants) |
-| `make reproduce-smoke` | per-commit tier (<10 min): anchor cells byte-asserted; exits 0 iff byte-identical |
-| `python examples/random_vs_greedy_vs_oracle.py` | instantiate the environment; run random / greedy-marginal / oracle policies; grade each by budgeted regret |
-| `make reproduce-estimation` | the estimation-vs-decision **characterization** (see below), byte-asserted from a committed extract |
-| `make reproduce-benchmark` | performance characterization: throughput + latency-decomposed certify at 10k…1M; counts/digests byte-asserted, wall-times reported |
-| `make reproduce-decision-gap` | Gate P1b: greedy-vs-oracle regret vs wait-cost steepness (~25 min, 30 HiGHS solves); deterministic fields byte-asserted ([`RESULTS.md`](RESULTS.md) §4) |
-| `make reproduce-inflicted-wait` | Gate P1c: own-wait vs inflicted-wait decomposition (~10 min); the `R_wait` +9.63 / +13.77 goldens, byte-asserted ([`RESULTS.md`](RESULTS.md) §5) |
-| `make reproduce-paper` / `reproduce-1m` | the longer tiers (full tables; 1M-flow-unit scale benchmark) |
+| `make test` | Python invariant, pricing, and golden-world suites (the Rust engine is tested in ephemeris-kernel's own CI) |
+| `make reproduce-smoke` | Fast byte-asserted anchor cells |
+| `python examples/random_vs_greedy_vs_oracle.py` | Compare random, greedy-marginal, and oracle policies by budgeted regret |
+| `make reproduce-estimation` | Reproduce the estimation-versus-decision characterization |
+| `make reproduce-benchmark` | Reproduce deterministic counts and report throughput and latency |
+| `make reproduce-decision-gap` | Reproduce greedy-versus-oracle regret across wait-cost steepness |
+| `make reproduce-inflicted-wait` | Reproduce own-wait and inflicted-wait decomposition |
+| `make reproduce-paper` | Reproduce the longer report tables |
+| `make reproduce-1m` | Run the million-flow-unit scale tier |
 
-## Using the environment
+## Use the RL-facing environment
 
 ```python
 from epure_arena.env import BudgetedRecourseEnv, Oracle, DEFER, INTERVENE
 
 env = BudgetedRecourseEnv(demand=2000)
-obs = env.reset(world="backbone", seed=42, severity="moderate", cost=1.0, budget=2)
+
+obs = env.reset(
+    world="backbone",
+    seed=42,
+    severity="moderate",
+    cost=1.0,
+    budget=2,
+)
+
 done = False
 while not done:
-    action = my_policy(obs)              # DEFER (0) or INTERVENE (1)
-    obs, reward, done = env.step(action) # reward = realized marginal Δ − cost
+    action = my_policy(obs)  # DEFER (0) or INTERVENE (1)
+    obs, reward, done = env.step(action)
 
-# cumulative reward telescopes to V(selected_set); grade it against the ceiling
 grader = Oracle(env.suite, cost=1.0, budget=2)
-regret = grader.budgeted_regret(env.selected_set)   # V(S*) − V(S_policy)
+regret = grader.budgeted_regret(env.selected_set)
 ```
 
-The executor (the DES live loop behind the reward) is the *environment* —
-never on a gradient path. Rewards are plain floats from replaying a
-deterministic simulation.
+The environment returns plain floating-point rewards from deterministic paired replay:
 
-## Estimation vs. decision — a characterization, not a result
+\[
+r_t = \Delta V_t - \text{intervention cost}.
+\]
 
-`make reproduce-estimation` reproduces a *measured fact about an
-**over-determined** regime* — it is **not** a headline result and **not** a
-law that "better prediction never helps decisions":
+Cumulative reward telescopes to the value of the selected set. The executor is part of the environment and is never placed on a gradient path.
 
-- The budgeted decision is dominated by ~2 high-value interventions per suite,
-  so a simple top-k ranking already reaches the optimum. Estimator accuracy
-  does not move the committed set beyond noise: **top-2** budgeted ranking
-  regret is identically 0 for every estimator (including a non-value
-  `severity` baseline); **top-1** does not separate beyond ~1 standard error
-  over 72 suites (e.g. 82.6 ± 47 vs 103.5 ± 49).
-- Estimator MAE meanwhile varies up to ~3.5× across arms — and that accuracy
-  lands exactly where `slack = 0` makes the decision forced (`demand_surge`).
+## Reproducible results
 
-So in *this* regime, estimation accuracy and decision quality are decoupled
-**because the decision is easy here**, stated with its noise. The regime where
-method choice would actually matter — many comparable, *competing*
-interventions (sub-additive value) — is where a decision gap appears, and a
-purpose-built **controlled-bottleneck** world now measures one (see
-[`RESULTS.md`](RESULTS.md) §4–§5). Whether *estimator* accuracy moves that
-decision, and partial / uncertified recourse, remain future work.
+The canonical, fully scoped result index is [`RESULTS.md`](RESULTS.md). The table below is an orientation layer, not a replacement for it.
+
+| Result | Label | Scope | Reproduce |
+|---|---|---|---|
+| Certified A* is 2.43× faster than this repository's Dijkstra control at 1M flow units | **PROVEN** | Single machine, one scenario family, absolute—not cross-system | `make reproduce-benchmark` |
+| Estimator MAE varies while top-2 decision regret stays at zero in the implemented budgeted-selection regime | **CHARACTERIZATION** | Over-determined regime; not a general claim about prediction and decision quality | `make reproduce-estimation` |
+| Plan, engine, and oracle wait values agree and close with zero unexplained mass | **PROVEN** | Exact pinned execution | `make test` |
+| Greedy-versus-oracle regret rises with wait-cost steepness | **PROVEN** | Controlled bottleneck, conservative HiGHS-certified oracle | `make reproduce-decision-gap` |
+| A positive inflicted-wait externality remains beyond single-unit marginal reasoning | **PROVEN** | Existence and lower-bound claim under the stated controlled regime | `make reproduce-inflicted-wait` |
+| The own-wait versus inflicted-wait split ratio is noisy | **CHARACTERIZATION** | The positive externality is load-bearing; the ratio is not | `make reproduce-inflicted-wait` |
+
+### The decision-gap result
+
+For steepness values \(s\in[0,0.75]\), reported greedy-versus-oracle regret is
+
+\[
+2.53 \rightarrow 4.52 \rightarrow 9.88 \rightarrow 24.82,
+\]
+
+with 95% confidence intervals excluding zero in the stated experiment.
+
+The oracle is conservative: it over-prices the convex wait cost and searches a restricted feasible set. Therefore a positive reported regret is a guaranteed-real lower bound on the true gap.
+
+### The inflicted-wait result
+
+The wait-blind or own-wait greedy policy leaves a residual that a single-unit marginal does not observe:
+
+- \(R_{\text{wait},S}=+9.63\,[+5.4,+13.8]\) at \(s=0.75\);
+- \(R_{\text{wait},S}=+13.77\,[+8.1,+19.5]\) in the harder admission-enforced leg.
+
+These are existence and lower-bound results under the exact scope documented in [`RESULTS.md`](RESULTS.md).
+
+## Estimation versus decision
+
+`make reproduce-estimation` reproduces a characterization of an **easy, over-determined regime**.
+
+In that regime:
+
+- approximately two interventions dominate each suite;
+- top-2 ranking regret is zero for every tested estimator;
+- estimator MAE varies by approximately 3.5×;
+- the committed set therefore does not move.
+
+This does **not** establish that better prediction never improves decisions. It establishes that estimator improvements cannot create value when the decision is already forced by the regime.
+
+The controlled-bottleneck experiment is the separate regime in which competing commitments create a measured decision gap.
 
 ## A certified RL environment
 
-`BudgetedRecourseEnv` is a ready reinforcement-learning environment with a
-property most lack: **the reward is exact, not estimated.** Because the world
-replays deterministically, paired same-seed rollouts (act vs. no-op) yield the
-true counterfactual value of any action — the reward signal is certified by
-construction, not a noisy proxy. A policy's regret is measured against a
-certified oracle, so "did the agent improve" is a proven quantity, not an
-inference. The currently-implemented **budgeted set-selection** regime is
-over-determined (above), so it is a clean testbed rather than a hard RL problem
-today. The harder, competing regime where a decision gap appears is now
-measured separately — the wait-cost / controlled-bottleneck experiment
-([`RESULTS.md`](RESULTS.md) §4–§5); a *learned* policy that closes that gap,
-and partial / uncertified recourse, remain future work.
+`BudgetedRecourseEnv` provides a reinforcement-learning-facing surface with two unusual properties:
 
-## Wait-cost pricing — the held-time apparatus
+1. **The reward is exact with respect to the deterministic environment.**  
+   It is computed from paired same-seed action/no-op replay rather than from a learned reward model.
 
-The engine records **`held_atu`** (deterministic held-but-not-in-transit time
-per flow unit), and a value functional prices it:
-`v_realized = v − C_wait(held) − late_loss`, with convex
-`C_wait = v·(a·w + b·w²)` — no cap, no floor, and a per-run decomposition that
-closes with **zero unexplained mass**. The `b>0` term is load-bearing: it makes
-`V(S)` non-additive through shared slots. Cost regimes are anchors named by
-*shape*, never by domain — `STEEP_SCARCE`, `SLACK_ELASTIC`, and `DEMO_ZERO`
-(the `C_wait≡0` point, where `v_realized` reduces to on-time value). A
-**conservative wait-pricing ILP oracle**
-([`python/epure_arena/lattice/ilp_wait.py`](python/epure_arena/lattice/ilp_wait.py))
-lower-bounds `v_realized` (a chord envelope over-charges the convex cost ⇒ the
-reported optimum cannot inflate), certified under the **HiGHS** backend; CBC is
-refused on the hard-tolerance class where its presolve returns false
-infeasibility. Pinned by [`tests/test_pricing.py`](tests/test_pricing.py) and
-[`tests/test_ilp_wait.py`](tests/test_ilp_wait.py).
+2. **Policy quality is measured against a certified reference.**  
+   Improvement is expressed as regret under the same cost and budget.
 
-This is the pricing *apparatus* — the instrument. Using it to quantify a
-*decision gap* between policies is now a **committed result**: greedy leaves a
-real, oracle-certified gap that grows with wait-cost steepness, and the
-inflicted-wait externality exists as a guaranteed-real lower bound — see
-[`RESULTS.md`](RESULTS.md) §4–§5 (`make reproduce-decision-gap` /
-`make reproduce-inflicted-wait`).
+The currently implemented budgeted set-selection regime is a clean testbed rather than a difficult learned-control benchmark. The repository claims no learned policy that closes the controlled-bottleneck gap.
 
-## Reproducibility
+## Wait-cost apparatus
 
-Reproductions byte-assert against **committed golden data**. Pin-reproducible
-artifacts (the golden worlds, the `examples/` env demo) regenerate
-deterministically from the engine. Where a result's **raw run folder is not
-retained** (gitignored / absent), the script reproduces the *committed extract*
-and says so in its output — it is not a from-zero re-derivation. The
-estimation characterization is one such case: its `gbt` arm is not byte-stable
-across sklearn versions, which is why the extract is committed (and why that
-reproduction needs no sklearn).
+The engine records deterministic held-but-not-in-transit time as `held_atu`.
 
-## Domain adapters
+Realized value is
 
-epure-arena is domain-neutral by construction. Anything that is a capacitated
-time-graph fits — supply networks, compute-job placement, patient flow, energy
-dispatch, rolling-stock rotation. An adapter maps its entities onto the wire
-protocol (`docs/protocol.md`), registers its own planners into the registry,
-and inherits the full apparatus — determinism, attribution, certificates,
-paired counterfactuals — for free.
+\[
+v_{\text{realized}}
+=
+v-C_{\text{wait}}(\text{held})-\text{late loss},
+\]
+
+with
+
+\[
+C_{\text{wait}}
+=
+v\left(a\,w+b\,w^2\right).
+\]
+
+The quadratic term is load-bearing: it makes the value of a committed set non-additive through shared capacity.
+
+The named regimes describe shape rather than application:
+
+- `STEEP_SCARCE`;
+- `SLACK_ELASTIC`;
+- `DEMO_ZERO`.
+
+The conservative wait-pricing ILP uses HiGHS for the certified hard-tolerance class. The implementation refuses a backend that returns false infeasibility on that class.
+
+## Reproducibility contract
+
+Reproduction commands byte-assert deterministic fields against committed golden data.
+
+Two cases are distinguished:
+
+- **From-world regeneration:** golden worlds and the environment demo regenerate from the engine.
+- **Committed-extract reproduction:** when a raw run folder is not retained or a third-party model is not byte-stable across versions, the script reproduces the committed extract and states that boundary explicitly.
+
+A script that reproduces an extract is not described as a from-zero re-derivation.
+
+## Scope and open work
+
+What is established:
+
+- deterministic replay;
+- typed attribution with mass closure;
+- exact counterfactual reward;
+- certified-reference regret;
+- wait-cost coherence;
+- a positive decision gap in the stated controlled regime;
+- existence of an inflicted-wait externality.
+
+What is not claimed:
+
+- a universally optimal planner;
+- a learned policy that closes the measured gap;
+- a general law that estimation and decision quality are decoupled;
+- full certification under partial or uncertain recourse;
+- unrestricted scaling of the ILP oracle;
+- applicability outside systems representable by the protocol.
+
+The declared `gate`, `propose`, `imagine`, `navigate`, and `optimize` seams are ready for learned components, but the current implementations are non-learned baselines.
+
+## First published study: the coordination frontier
+
+*When Is Intelligence Worth Spending? Epure Arena and the Coordination
+Frontier* — published in `v0.2.0` at
+[`experiments/coordination-frontier/`](experiments/coordination-frontier/):
+
+- [the note (PDF)](experiments/coordination-frontier/coordination-frontier.pdf), rendered from the committed Typst source;
+- [`REPRODUCE.md`](experiments/coordination-frontier/REPRODUCE.md) — the ledger → numbers → figures chain and its exact public/private boundary;
+- nine committed JSON ledgers as the primary records;
+- `verify_note_numbers.py` — re-asserts every number quoted in the note against the ledgers (97 checks, stdlib only);
+- `make_figures.py` — regenerates every figure from the same ledgers (stdlib only).
+
+```bash
+cd experiments/coordination-frontier
+python3 verify_note_numbers.py   # 97 checks, exits non-zero on any mismatch
+python3 make_figures.py          # figures regenerate from the ledgers
+```
+
+## Repository map
+
+```text
+python/epure_arena/
+  scenarios/       deterministic world generation
+  world/           world-to-planner bridge
+  harness/         paired replay, feasibility, run lake
+  lattice/         certificate bounds and wait-pricing oracle
+  optimize/        planner interface, baselines, compilation, fidelity
+  env/             RL-facing environment and grader
+  gate/            intervention-selection seam
+  propose/         candidate-generation seam
+  imagine/         counterfactual-estimation seam
+  navigate/        selection seam
+  reasons.py       typed attribution vocabulary
+
+examples/           runnable policy and fidelity examples
+experiments/        published studies (coordination-frontier: note + ledgers)
+repro/              reproduction scripts and committed goldens
+tests/              invariants, golden worlds, pricing, and certification
+docs/               overview, protocol, and benchmarks
+ARCHITECTURE.md     dependency and responsibility map
+RESULTS.md          canonical scoped result index
+decision-quality.pdf longer research narrative
+```
+
+## Relationship to Ephemeris Kernel
+
+[`ephemeris-kernel`](https://github.com/cpennetier/ephemeris-kernel) owns the deterministic execution substrate. Epure adds the world generators, certifier, policy seams, counterfactual harness, and grading logic above it.
+
+Epure may depend on Ephemeris. Ephemeris does not depend on Epure.
 
 ## License
 
 Dual-licensed:
 
-- **Code** — Apache-2.0 ([`LICENSE`](LICENSE)).
-- **Written artifacts** (this README, [`RESULTS.md`](RESULTS.md),
-  [`docs/OVERVIEW.md`](docs/OVERVIEW.md), [`docs/benchmarks.md`](docs/benchmarks.md),
-  [`docs/protocol.md`](docs/protocol.md), and the paper
-  [`decision-quality.pdf`](decision-quality.pdf)) — CC-BY-4.0.
+- **Code:** Apache-2.0 — see [LICENSE](LICENSE).
+- **Written artifacts:** CC-BY-4.0.
 
-Copyright 2026 Christophe Pennetier.
+Copyright © 2026 Christophe Pennetier.
