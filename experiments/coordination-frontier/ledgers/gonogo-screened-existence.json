@@ -1,0 +1,477 @@
+{
+  "aggregate": {
+    "R_wait": {
+      "ci95": [
+        6.885817426409062,
+        11.533726367518945
+      ],
+      "mean": 9.209771896964003,
+      "n": 10
+    },
+    "cem_minus_random_paired": {
+      "ci95": [
+        -0.01698243956985259,
+        0.1064497266493103
+      ],
+      "mean": 0.04473364353972885,
+      "n": 10
+    },
+    "phi_1opt": {
+      "ci95": [
+        -0.016522748227304915,
+        0.042704508653118964
+      ],
+      "mean": 0.013090880212907025,
+      "n": 10
+    },
+    "phi_2opt": {
+      "ci95": [
+        -0.0006435229991909499,
+        0.0030658965619518776
+      ],
+      "mean": 0.0012111867813804638,
+      "n": 10
+    },
+    "phi_cem": {
+      "ci95": [
+        -0.0015586716042156334,
+        0.2087334608939257
+      ],
+      "mean": 0.10358739464485503,
+      "n": 10
+    },
+    "phi_oneshot": {
+      "ci95": [
+        -0.015739277093557096,
+        0.04067955800021796
+      ],
+      "mean": 0.012470140453330432,
+      "n": 10
+    },
+    "phi_polish": {
+      "ci95": [
+        -0.00677667843064406,
+        0.054946609770221574
+      ],
+      "mean": 0.02408496566978876,
+      "n": 10
+    },
+    "phi_random": {
+      "ci95": [
+        -0.03078562661361294,
+        0.14849312882386526
+      ],
+      "mean": 0.05885375110512616,
+      "n": 10
+    }
+  },
+  "attestations": {
+    "eval_blind_inputs": "greedy incumbent + per-unit values, self-generated menus, slot capacities, exact separable pricing - no field is a function of the oracle solution",
+    "noncircular_ast": "NONE (proposer and screen share the attested module)"
+  },
+  "b_guards_at_or_above_floor": [
+    "phi_polish"
+  ],
+  "condition_a_reachable": false,
+  "condition_b_below_floor": false,
+  "condition_c_learning_separates": false,
+  "halts": [],
+  "id": "gonogo-screened-existence",
+  "label": "CHARACTERIZATION",
+  "materiality_floor": 0.02,
+  "reproduce_target": ".venv/bin/python tools/gonogo_screened.py",
+  "rows": [
+    {
+      "R_wait": 7.397788174739333,
+      "V_greedy": 182.95161469531794,
+      "V_oracle": 190.34940287005728,
+      "cem_best_bundle": {
+        "drops": [
+          1,
+          14,
+          33,
+          39,
+          67,
+          94
+        ],
+        "n_admits": 2,
+        "n_reroutes": 6
+      },
+      "phi_1opt": 0.0,
+      "phi_2opt": 0.0,
+      "phi_cem": 0.12470140453330417,
+      "phi_oneshot": 0.12470140453330393,
+      "phi_polish": 0.12470140453330388,
+      "phi_random": 0.12470140453330417,
+      "seed": 304,
+      "verifier_calls_cem": 3000,
+      "wall_s": 6.3
+    },
+    {
+      "R_wait": 4.291128489206329,
+      "V_greedy": 200.52971094837073,
+      "V_oracle": 204.82083943757706,
+      "cem_best_bundle": {
+        "drops": [
+          17,
+          29,
+          30,
+          37,
+          45,
+          47
+        ],
+        "n_admits": 2,
+        "n_reroutes": 8
+      },
+      "phi_1opt": 0.0,
+      "phi_2opt": 0.0,
+      "phi_cem": 0.4558233372167456,
+      "phi_oneshot": 0.0,
+      "phi_polish": 0.046760663643132645,
+      "phi_random": 0.3944485179965061,
+      "seed": 306,
+      "verifier_calls_cem": 3000,
+      "wall_s": 6.3
+    },
+    {
+      "R_wait": 11.184206240181766,
+      "V_greedy": 173.57761679448805,
+      "V_oracle": 184.76182303466982,
+      "cem_best_bundle": null,
+      "phi_1opt": 0.13090880212907025,
+      "phi_2opt": 0.007009914843278083,
+      "phi_cem": 0.0,
+      "phi_oneshot": 0.0,
+      "phi_polish": 0.06938758852145105,
+      "phi_random": 0.06938758852145098,
+      "seed": 311,
+      "verifier_calls_cem": 3000,
+      "wall_s": 6.2
+    },
+    {
+      "R_wait": 13.035984870864894,
+      "V_greedy": 153.62710234979593,
+      "V_oracle": 166.66308722066083,
+      "cem_best_bundle": null,
+      "phi_1opt": 0.0,
+      "phi_2opt": 0.0,
+      "phi_cem": 0.0,
+      "phi_oneshot": 0.0,
+      "phi_polish": 0.0,
+      "phi_random": 0.0,
+      "seed": 315,
+      "verifier_calls_cem": 3000,
+      "wall_s": 6.0
+    },
+    {
+      "R_wait": 9.027151463796656,
+      "V_greedy": 189.2788094652987,
+      "V_oracle": 198.30596092909536,
+      "cem_best_bundle": {
+        "drops": [
+          9,
+          58,
+          71,
+          77
+        ],
+        "n_admits": 3,
+        "n_reroutes": 6
+      },
+      "phi_1opt": 0.0,
+      "phi_2opt": 0.0,
+      "phi_cem": 0.1810292333053701,
+      "phi_oneshot": 0.0,
+      "phi_polish": 0.0,
+      "phi_random": 0.0,
+      "seed": 316,
+      "verifier_calls_cem": 3000,
+      "wall_s": 6.2
+    },
+    {
+      "R_wait": 8.017222413667383,
+      "V_greedy": 187.98865008717956,
+      "V_oracle": 196.00587250084695,
+      "cem_best_bundle": {
+        "drops": [
+          7,
+          32,
+          44
+        ],
+        "n_admits": 1,
+        "n_reroutes": 6
+      },
+      "phi_1opt": 0.0,
+      "phi_2opt": 0.0,
+      "phi_cem": 0.01944768772416811,
+      "phi_oneshot": 0.0,
+      "phi_polish": 0.0,
+      "phi_random": 0.0,
+      "seed": 322,
+      "verifier_calls_cem": 3000,
+      "wall_s": 5.9
+    },
+    {
+      "R_wait": 10.220164529191408,
+      "V_greedy": 172.42579338170117,
+      "V_oracle": 182.64595791089258,
+      "cem_best_bundle": {
+        "drops": [
+          21,
+          31,
+          32,
+          36,
+          37,
+          59
+        ],
+        "n_admits": 1,
+        "n_reroutes": 12
+      },
+      "phi_1opt": 0.0,
+      "phi_2opt": 0.0,
+      "phi_cem": 0.047476054218329136,
+      "phi_oneshot": 0.0,
+      "phi_polish": 0.0,
+      "phi_random": 0.0,
+      "seed": 330,
+      "verifier_calls_cem": 3000,
+      "wall_s": 5.9
+    },
+    {
+      "R_wait": 4.600842966215566,
+      "V_greedy": 200.17308889800438,
+      "V_oracle": 204.77393186421995,
+      "cem_best_bundle": null,
+      "phi_1opt": 0.0,
+      "phi_2opt": 0.0,
+      "phi_cem": 0.0,
+      "phi_oneshot": 3.8609377725869153e-16,
+      "phi_polish": 0.0,
+      "phi_random": 3.8609377725869153e-16,
+      "seed": 332,
+      "verifier_calls_cem": 3000,
+      "wall_s": 5.9
+    },
+    {
+      "R_wait": 10.183693370394082,
+      "V_greedy": 175.12231313853073,
+      "V_oracle": 185.3060065089248,
+      "cem_best_bundle": null,
+      "phi_1opt": 0.0,
+      "phi_2opt": 0.0,
+      "phi_cem": 0.0,
+      "phi_oneshot": 0.0,
+      "phi_polish": 0.0,
+      "phi_random": 0.0,
+      "seed": 336,
+      "verifier_calls_cem": 3000,
+      "wall_s": 5.7
+    },
+    {
+      "R_wait": 14.139536451382611,
+      "V_greedy": 175.053808898884,
+      "V_oracle": 189.1933453502666,
+      "cem_best_bundle": {
+        "drops": [
+          1,
+          19,
+          21,
+          29,
+          33,
+          43
+        ],
+        "n_admits": 2,
+        "n_reroutes": 9
+      },
+      "phi_1opt": 0.0,
+      "phi_2opt": 0.005101952970526553,
+      "phi_cem": 0.20739622945063305,
+      "phi_oneshot": 0.0,
+      "phi_polish": 0.0,
+      "phi_random": 0.0,
+      "seed": 337,
+      "verifier_calls_cem": 3000,
+      "wall_s": 5.6
+    }
+  ],
+  "scope": "backbone-enforced n12/d120 rho=2.0 WITH the reachability screen as part of the method; SCREEN pool seeds 300-339 (verifier-only probe, no oracle), EVAL = top-10 firing worlds, fresh eval RNG (prospective); budget K=200 R=15 e=20 cap 3500/world (identical to runs #1-3); materiality floor 0.02 fixed a priori; non-oracle-seeded (AST-attested); oracle only in the phi denominator",
+  "screen": {
+    "eval_seeds": [
+      304,
+      306,
+      311,
+      315,
+      316,
+      322,
+      330,
+      332,
+      336,
+      337
+    ],
+    "fire_rate": 0.25,
+    "n_fired": 10,
+    "pool": [
+      {
+        "screen_dv": 0.0,
+        "seed": 300
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 301
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 302
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 303
+      },
+      {
+        "screen_dv": 0.9225,
+        "seed": 304
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 305
+      },
+      {
+        "screen_dv": 2.3254,
+        "seed": 306
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 307
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 308
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 309
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 310
+      },
+      {
+        "screen_dv": 0.776,
+        "seed": 311
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 312
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 313
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 314
+      },
+      {
+        "screen_dv": 1.1491,
+        "seed": 315
+      },
+      {
+        "screen_dv": 1.5654,
+        "seed": 316
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 317
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 318
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 319
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 320
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 321
+      },
+      {
+        "screen_dv": 0.4075,
+        "seed": 322
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 323
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 324
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 325
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 326
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 327
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 328
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 329
+      },
+      {
+        "screen_dv": 0.1727,
+        "seed": 330
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 331
+      },
+      {
+        "screen_dv": 0.7126,
+        "seed": 332
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 333
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 334
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 335
+      },
+      {
+        "screen_dv": 1.9395,
+        "seed": 336
+      },
+      {
+        "screen_dv": 4.4586,
+        "seed": 337
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 338
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 339
+      }
+    ],
+    "pool_size": 40
+  },
+  "verdict": "REJECT"
+}

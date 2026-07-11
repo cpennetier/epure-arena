@@ -1,0 +1,432 @@
+{
+  "aggregate": {
+    "R_wait": {
+      "ci95": [
+        10.159724226236214,
+        13.67945501861185
+      ],
+      "mean": 11.919589622424033,
+      "n": 10
+    },
+    "cem_minus_random": {
+      "ci95": [
+        -0.05198596797712549,
+        0.14999873671200806
+      ],
+      "mean": 0.04900638436744128,
+      "n": 10
+    },
+    "phi_1opt": {
+      "ci95": [
+        -0.008407847085017732,
+        0.06005562404014426
+      ],
+      "mean": 0.025823888477563263,
+      "n": 10
+    },
+    "phi_2opt": {
+      "ci95": [
+        -0.011931179433312823,
+        0.057437795852194044
+      ],
+      "mean": 0.02275330820944061,
+      "n": 10
+    },
+    "phi_cem": {
+      "ci95": [
+        0.2012080034506006,
+        0.3767866609319622
+      ],
+      "mean": 0.28899733219128143,
+      "n": 10
+    },
+    "phi_oneshot": {
+      "ci95": [
+        0.03755158657745318,
+        0.12193437983589629
+      ],
+      "mean": 0.07974298320667474,
+      "n": 10
+    },
+    "phi_polish": {
+      "ci95": [
+        0.0029630847599748864,
+        0.08587367783576386
+      ],
+      "mean": 0.044418381297869375,
+      "n": 10
+    },
+    "phi_random": {
+      "ci95": [
+        0.14595003035679235,
+        0.334031865290888
+      ],
+      "mean": 0.23999094782384017,
+      "n": 10
+    }
+  },
+  "attestations": {
+    "eval_blind_inputs": "greedy incumbent + per-unit values, self-generated menus, slot capacities, exact separable pricing - no field is a function of the oracle solution",
+    "noncircular_ast": "NONE"
+  },
+  "condition_a_reachable": true,
+  "condition_b_coordination_bound": false,
+  "halts": [],
+  "id": "gonogo-grid-existence",
+  "label": "CHARACTERIZATION",
+  "local_baselines_clearing_zero": [
+    "phi_oneshot"
+  ],
+  "reproduce_target": ".venv/bin/python tools/gonogo_grid.py",
+  "rows": [
+    {
+      "R_wait": 7.880779399971203,
+      "V_greedy": 219.6097246113039,
+      "V_oracle": 227.4905040112751,
+      "cem_best_bundle": {
+        "drops": [
+          10,
+          34,
+          42,
+          72,
+          97
+        ],
+        "n_admits": 2,
+        "n_reroutes": 4
+      },
+      "phi_1opt": 0.0,
+      "phi_2opt": 0.0,
+      "phi_cem": 0.40148343920800034,
+      "phi_oneshot": 0.04602833933114691,
+      "phi_polish": 0.0,
+      "phi_random": 0.2388857207634665,
+      "seed": 260,
+      "verifier_calls_cem": 3000,
+      "wall_s": 49.3
+    },
+    {
+      "R_wait": 14.03443397476451,
+      "V_greedy": 223.29482457483246,
+      "V_oracle": 237.32925854959697,
+      "cem_best_bundle": {
+        "drops": [
+          25,
+          74,
+          81,
+          90,
+          98,
+          107
+        ],
+        "n_admits": 1,
+        "n_reroutes": 5
+      },
+      "phi_1opt": 0.0,
+      "phi_2opt": 0.0,
+      "phi_cem": 0.39414707887843414,
+      "phi_oneshot": 0.08740031257597453,
+      "phi_polish": 0.0,
+      "phi_random": 0.1741532820660407,
+      "seed": 261,
+      "verifier_calls_cem": 3000,
+      "wall_s": 50.3
+    },
+    {
+      "R_wait": 12.101002421195545,
+      "V_greedy": 232.43713343843555,
+      "V_oracle": 244.5381358596311,
+      "cem_best_bundle": {
+        "drops": [
+          7,
+          17,
+          20,
+          43
+        ],
+        "n_admits": 1,
+        "n_reroutes": 2
+      },
+      "phi_1opt": 0.09878099006957329,
+      "phi_2opt": 0.09878099006957329,
+      "phi_cem": 0.22099739837596835,
+      "phi_oneshot": 0.0,
+      "phi_polish": 0.0,
+      "phi_random": 0.10891920924116447,
+      "seed": 262,
+      "verifier_calls_cem": 3000,
+      "wall_s": 52.2
+    },
+    {
+      "R_wait": 15.693314984660901,
+      "V_greedy": 227.14622081244875,
+      "V_oracle": 242.83953579710965,
+      "cem_best_bundle": {
+        "drops": [
+          3,
+          7,
+          31,
+          36,
+          45,
+          77
+        ],
+        "n_admits": 2,
+        "n_reroutes": 4
+      },
+      "phi_1opt": 0.03070580268122655,
+      "phi_2opt": 0.0,
+      "phi_cem": 0.05828517305330656,
+      "phi_oneshot": 0.0,
+      "phi_polish": 0.0,
+      "phi_random": 0.08902791235972578,
+      "seed": 264,
+      "verifier_calls_cem": 3000,
+      "wall_s": 58.3
+    },
+    {
+      "R_wait": 10.804599067084297,
+      "V_greedy": 235.46304276870103,
+      "V_oracle": 246.26764183578533,
+      "cem_best_bundle": {
+        "drops": [
+          7,
+          17,
+          25,
+          36,
+          47,
+          59
+        ],
+        "n_admits": 1,
+        "n_reroutes": 7
+      },
+      "phi_1opt": 0.0,
+      "phi_2opt": 0.0,
+      "phi_cem": 0.22800031863942308,
+      "phi_oneshot": 0.16666918012349155,
+      "phi_polish": 0.16666918012349147,
+      "phi_random": 0.4694135312914756,
+      "seed": 269,
+      "verifier_calls_cem": 3000,
+      "wall_s": 58.4
+    },
+    {
+      "R_wait": 13.393187667661863,
+      "V_greedy": 243.3182424693521,
+      "V_oracle": 256.71143013701396,
+      "cem_best_bundle": {
+        "drops": [
+          42
+        ],
+        "n_admits": 1,
+        "n_reroutes": 0
+      },
+      "phi_1opt": 0.0,
+      "phi_2opt": 0.0,
+      "phi_cem": 0.2442162418648164,
+      "phi_oneshot": 0.04584331176701441,
+      "phi_polish": 0.04584331176701437,
+      "phi_random": 0.29285959286628876,
+      "seed": 270,
+      "verifier_calls_cem": 3000,
+      "wall_s": 46.1
+    },
+    {
+      "R_wait": 11.586489509510983,
+      "V_greedy": 213.84695917720904,
+      "V_oracle": 225.43344868672003,
+      "cem_best_bundle": {
+        "drops": [
+          10,
+          18,
+          46,
+          106
+        ],
+        "n_admits": 4,
+        "n_reroutes": 2
+      },
+      "phi_1opt": 0.0,
+      "phi_2opt": 0.0,
+      "phi_cem": 0.38274534791825,
+      "phi_oneshot": 0.1345368485818281,
+      "phi_polish": 0.057528028879141546,
+      "phi_random": 0.24655627357483212,
+      "seed": 273,
+      "verifier_calls_cem": 3000,
+      "wall_s": 48.3
+    },
+    {
+      "R_wait": 14.176043443612315,
+      "V_greedy": 239.96040069084944,
+      "V_oracle": 254.13644413446175,
+      "cem_best_bundle": {
+        "drops": [
+          38,
+          43,
+          55,
+          86,
+          117
+        ],
+        "n_admits": 3,
+        "n_reroutes": 4
+      },
+      "phi_1opt": 0.12875209202483281,
+      "phi_2opt": 0.12875209202483281,
+      "phi_cem": 0.3319559098919943,
+      "phi_oneshot": 0.1428085474782452,
+      "phi_polish": 0.0,
+      "phi_random": 0.1428085474782452,
+      "seed": 274,
+      "verifier_calls_cem": 3000,
+      "wall_s": 54.2
+    },
+    {
+      "R_wait": 8.899151559015621,
+      "V_greedy": 233.8888556860483,
+      "V_oracle": 242.7880072450639,
+      "cem_best_bundle": {
+        "drops": [
+          0,
+          3,
+          5,
+          6,
+          22,
+          27
+        ],
+        "n_admits": 3,
+        "n_reroutes": 1
+      },
+      "phi_1opt": 0.0,
+      "phi_2opt": 0.0,
+      "phi_cem": 0.1792289981287085,
+      "phi_oneshot": 0.058772909818152856,
+      "phi_polish": 0.058772909818152856,
+      "phi_random": 0.18837199264324964,
+      "seed": 277,
+      "verifier_calls_cem": 3000,
+      "wall_s": 55.4
+    },
+    {
+      "R_wait": 10.62689419676309,
+      "V_greedy": 234.29956809867795,
+      "V_oracle": 244.92646229544104,
+      "cem_best_bundle": {
+        "drops": [
+          7,
+          13,
+          20,
+          40,
+          80,
+          84
+        ],
+        "n_admits": 2,
+        "n_reroutes": 1
+      },
+      "phi_1opt": 0.0,
+      "phi_2opt": 0.0,
+      "phi_cem": 0.4489134159539131,
+      "phi_oneshot": 0.11537038239089373,
+      "phi_polish": 0.11537038239089355,
+      "phi_random": 0.4489134159539132,
+      "seed": 278,
+      "verifier_calls_cem": 3000,
+      "wall_s": 45.9
+    }
+  ],
+  "scope": "grid-enforced n12/d120 rho=2.0; SCREEN seeds 260-279 (no oracle), EVAL = 10 highest-screen worlds (DISCLOSED screened selection); budget K=200 R=15 e=20 cap 3500 per world (identical to run #1); non-oracle-seeded (AST-attested); oracle only in the phi denominator",
+  "screen": {
+    "eval_seeds": [
+      260,
+      261,
+      262,
+      264,
+      269,
+      270,
+      273,
+      274,
+      277,
+      278
+    ],
+    "n_fired": 18,
+    "pool": [
+      {
+        "screen_dv": 2.2871,
+        "seed": 260
+      },
+      {
+        "screen_dv": 7.1121,
+        "seed": 261
+      },
+      {
+        "screen_dv": 4.3004,
+        "seed": 262
+      },
+      {
+        "screen_dv": 0.6138,
+        "seed": 263
+      },
+      {
+        "screen_dv": 2.3332,
+        "seed": 264
+      },
+      {
+        "screen_dv": 1.0991,
+        "seed": 265
+      },
+      {
+        "screen_dv": 0.7702,
+        "seed": 266
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 267
+      },
+      {
+        "screen_dv": 1.2657,
+        "seed": 268
+      },
+      {
+        "screen_dv": 5.9654,
+        "seed": 269
+      },
+      {
+        "screen_dv": 4.2611,
+        "seed": 270
+      },
+      {
+        "screen_dv": 0.0,
+        "seed": 271
+      },
+      {
+        "screen_dv": 0.831,
+        "seed": 272
+      },
+      {
+        "screen_dv": 3.4691,
+        "seed": 273
+      },
+      {
+        "screen_dv": 3.8497,
+        "seed": 274
+      },
+      {
+        "screen_dv": 1.1794,
+        "seed": 275
+      },
+      {
+        "screen_dv": 1.7679,
+        "seed": 276
+      },
+      {
+        "screen_dv": 2.5507,
+        "seed": 277
+      },
+      {
+        "screen_dv": 5.3334,
+        "seed": 278
+      },
+      {
+        "screen_dv": 1.2211,
+        "seed": 279
+      }
+    ],
+    "selection_moot": true
+  },
+  "verdict": "REJECT-TOO-EASY"
+}

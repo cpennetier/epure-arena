@@ -18,3 +18,6 @@ docs/SESSION_CONTEXT.md
 PUBLICATION-CHECKLIST.md
 __pycache__/
 *.pyc
+
+# generated views of the committed ledgers (make_figures.py)
+experiments/coordination-frontier/figures/
