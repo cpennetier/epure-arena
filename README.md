@@ -73,9 +73,7 @@ The attribution table closes with zero unexplained mass. A vague explanation suc
 Any policy can be evaluated by
 
 $$
-\operatorname{regret}(S_{\text{policy}})
-=
-V(S^\*)-V(S_{\text{policy}}),
+\operatorname{regret}(S_{\text{policy}}) = V(S^*) - V(S_{\text{policy}})
 $$
 
 where $S^*$ is the certified reference under the same cost and budget constraints.
@@ -267,17 +265,13 @@ The engine records deterministic held-but-not-in-transit time as `held_atu`.
 Realized value is
 
 $$
-v_{\text{realized}}
-=
-v-C_{\text{wait}}(\text{held})-\text{late loss},
+v_{\text{realized}} = v - C_{\text{wait}}(\text{held}) - \text{late loss}
 $$
 
 with
 
 $$
-C_{\text{wait}}
-=
-v\left(a\,w+b\,w^2\right).
+C_{\text{wait}} = v\left(a\,w + b\,w^2\right)
 $$
 
 The quadratic term is load-bearing: it makes the value of a committed set non-additive through shared capacity.
