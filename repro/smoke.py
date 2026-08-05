@@ -42,10 +42,20 @@ SLICES: dict[str, list[str]] = {
     ],
     # 20k demand: the smoke-sized regret cell (the full 40k cell runs in
     # reproduce-paper); keeps the smoke tier inside its 10-minute budget.
+    #
+    # The LP time limit is raised well above regret_table's 600 s default ON
+    # PURPOSE. That default is a wall-clock guard, and a solve it truncates
+    # reports lp_status != "optimal" with lp_ub_units and regret_units_vs_lp
+    # as null — so the byte-assertion below would depend on how fast the
+    # machine is, not on what the code computes. This cell reaches optimality
+    # in roughly 8 minutes on a hosted runner and well under that on
+    # development hardware; 1800 s keeps a genuine runaway guard while
+    # putting machine speed out of the assertion. Raising it cannot change
+    # the asserted values: it only prevents truncation short of the optimum.
     "regret_one_cell": [
         "repro/regret_table.py", "--cells", "backbone:hourly:tight",
         "--seeds", "42", "--demand", "20000", "--policies", "slack_first",
-        "--no-emit",
+        "--lp-time-limit", "1800", "--no-emit",
     ],
     "gate_partA_reduced": [
         "repro/gate_experiment.py", "partA", "--worlds", "backbone",
@@ -71,6 +81,29 @@ def _canonical(value):
     if isinstance(value, list):
         return [_canonical(v) for v in value]
     return value
+
+
+def _explain(expected: list, got: list, limit: int = 12) -> str:
+    """Name the fields that drifted, so a mismatch diagnoses itself.
+
+    A bare "MISMATCH" says a byte-assertion failed but not what moved, which
+    is the difference between reading one line and re-running a ten-minute
+    slice by hand. Reports at most ``limit`` differing fields.
+    """
+    if len(expected) != len(got):
+        return (f"    row count: expected {len(expected)}, got {len(got)}")
+    lines: list[str] = []
+    for i, (exp, act) in enumerate(zip(expected, got)):
+        for key in sorted(set(exp) | set(act)):
+            e, a = exp.get(key, "<absent>"), act.get(key, "<absent>")
+            if e != a:
+                lines.append(f"    row {i} {key}: expected {e!r}, got {a!r}")
+    if not lines:
+        return "    (values equal; formatting or key order differs)"
+    shown = lines[:limit]
+    if len(lines) > limit:
+        shown.append(f"    ... and {len(lines) - limit} more field(s)")
+    return "\n".join(shown)
 
 
 def run_slice(name: str, argv: list[str]) -> list[dict]:
@@ -108,7 +141,9 @@ def main() -> None:
             if not path.exists():
                 failures.append(f"{name}: missing expected table {path}")
             elif path.read_text() != blob:
-                failures.append(f"{name}: MISMATCH vs {path.relative_to(ROOT)}")
+                failures.append(
+                    f"{name}: MISMATCH vs {path.relative_to(ROOT)}\n"
+                    + _explain(json.loads(path.read_text()), rows))
             else:
                 print(f"[smoke] {name}: byte-identical ({len(rows)} rows)",
                       file=sys.stderr)
