@@ -1,0 +1,339 @@
+name: reproduce-paper
+
+# The full published reproduction.
+#
+# `make reproduce-paper` remains the canonical LOCAL command and is unchanged:
+# it runs the same stages, sequentially, from a clean clone. That sequential
+# run takes longer than a single hosted job is allowed to live (six hours), so
+# on Actions the same work is spread across jobs instead of being shortened.
+#
+# NOTHING about the experiment is reduced here. The gate experiment is split
+# by (world, scenario seed) only — every shard inherits every other axis from
+# the committed defaults in repro/gate_experiment.py, the shard axis itself is
+# derived from those same defaults rather than restated below, and
+# repro/merge_shards.py refuses to produce a merged record that is not exactly
+# the record the sequential run would have emitted: no duplicate cell, no
+# missing cell, no undeclared cell, and the same row order.
+
+on:
+  schedule:
+    - cron: "0 4 * * 1"   # weekly, Monday 04:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One full reproduction at a time. A queued run waits rather than interleaving
+# with a run already spending compute-hours; a half-overlapped reproduction
+# would publish artifacts from two different commits.
+concurrency:
+  group: reproduce-paper
+  cancel-in-progress: false
+
+# The implicit shell is `bash -e`, which does NOT set pipefail: a step that
+# pipes a validator into `tee` would report the exit status of `tee` and pass
+# while the validation failed. Every step here runs with -eo pipefail.
+defaults:
+  run:
+    shell: bash
+
+env:
+  ARTIFACT_RETENTION_DAYS: 90
+
+jobs:
+  # ── the declared scope, derived once and published to the matrix ───────
+  plan:
+    name: plan (derive the shard axis from the committed grid)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      shards_part_a: ${{ steps.derive.outputs.shards_part_a }}
+      shards_part_b: ${{ steps.derive.outputs.shards_part_b }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup-arena
+
+      - name: Record the declared grid
+        run: |
+          python - <<'PY'
+          import sys
+          sys.path.insert(0, "repro")
+          from merge_shards import build_grid, shard_matrix
+          for part in ("partA", "partB"):
+              grid = build_grid(part)
+              print(f"{part}: {len(grid)} declared cells, "
+                    f"{len(shard_matrix(grid))} shards")
+          PY
+
+      - name: Derive the shard axis
+        id: derive
+        run: |
+          A="$(python repro/merge_shards.py partA --print-shard-matrix)"
+          B="$(python repro/merge_shards.py partB --print-shard-matrix)"
+          echo "part A shards: $A"
+          echo "part B shards: $B"
+          echo "shards_part_a=$A" >> "$GITHUB_OUTPUT"
+          echo "shards_part_b=$B" >> "$GITHUB_OUTPUT"
+
+  # ── 1. strand matrix ───────────────────────────────────────────────────
+  strand-matrix:
+    name: strand matrix
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup-arena
+      - name: Run the strand-attribution matrix
+        run: |
+          mkdir -p out
+          python repro/strand_matrix.py matrix --no-emit \
+            > out/strand_matrix.jsonl 2> out/strand_matrix.log
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: strand-matrix
+          path: out/
+          retention-days: ${{ env.ARTIFACT_RETENTION_DAYS }}
+
+  # ── 2. regret table ────────────────────────────────────────────────────
+  regret-table:
+    name: regret table
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup-arena
+      - name: Run the regret-vs-lattice table
+        run: |
+          mkdir -p out
+          python repro/regret_table.py --no-emit \
+            > out/regret_table.jsonl 2> out/regret_table.log
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regret-table
+          path: out/
+          retention-days: ${{ env.ARTIFACT_RETENTION_DAYS }}
+
+  # ── 3. gate part A, sharded by world x scenario seed ───────────────────
+  gate-part-a:
+    name: gate part A (${{ matrix.shard.world }} s${{ matrix.shard.sseed }})
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.plan.outputs.shards_part_a) }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup-arena
+
+      # Only --worlds and --sseeds are passed: every other axis (kinds,
+      # severities, disruption seeds, demand, events per kind) keeps the
+      # committed default, so the union of shards is the declared grid.
+      - name: Run part A for this shard
+        run: |
+          mkdir -p out
+          python repro/gate_experiment.py partA --no-emit \
+            --worlds "${{ matrix.shard.world }}" \
+            --sseeds "${{ matrix.shard.sseed }}" \
+            > "out/gate_partA-${{ matrix.shard.world }}-${{ matrix.shard.sseed }}.jsonl" \
+            2> "out/gate_partA-${{ matrix.shard.world }}-${{ matrix.shard.sseed }}.log"
+          wc -l "out/gate_partA-${{ matrix.shard.world }}-${{ matrix.shard.sseed }}.jsonl"
+
+      # Uploaded unconditionally: aggregation happens in another job, and a
+      # failed shard's partial output plus its log is the forensic record.
+      # A partial shard cannot corrupt the merge — `needs` blocks the merge
+      # on shard failure, and the merge validator rejects a short record.
+      - name: Upload shard
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gate-partA-shard-${{ matrix.shard.world }}-${{ matrix.shard.sseed }}
+          path: out/
+          retention-days: ${{ env.ARTIFACT_RETENTION_DAYS }}
+          if-no-files-found: warn
+
+  # ── 4. gate part B, sharded by world x scenario seed ───────────────────
+  gate-part-b:
+    name: gate part B (${{ matrix.shard.world }} s${{ matrix.shard.sseed }})
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.plan.outputs.shards_part_b) }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup-arena
+
+      - name: Run part B for this shard
+        run: |
+          mkdir -p out
+          python repro/gate_experiment.py partB --no-emit \
+            --worlds "${{ matrix.shard.world }}" \
+            --sseeds "${{ matrix.shard.sseed }}" \
+            > "out/gate_partB-${{ matrix.shard.world }}-${{ matrix.shard.sseed }}.jsonl" \
+            2> "out/gate_partB-${{ matrix.shard.world }}-${{ matrix.shard.sseed }}.log"
+          wc -l "out/gate_partB-${{ matrix.shard.world }}-${{ matrix.shard.sseed }}.jsonl"
+
+      - name: Upload shard
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gate-partB-shard-${{ matrix.shard.world }}-${{ matrix.shard.sseed }}
+          path: out/
+          retention-days: ${{ env.ARTIFACT_RETENTION_DAYS }}
+          if-no-files-found: warn
+
+  # ── 5. deterministic merge + validation of part A ──────────────────────
+  merge-part-a:
+    name: merge + validate part A
+    needs: gate-part-a
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup-arena
+
+      - name: Download every part A shard
+        uses: actions/download-artifact@v5
+        with:
+          pattern: gate-partA-shard-*
+          merge-multiple: true
+          path: shards
+
+      - name: List what arrived
+        run: ls -l shards/
+
+      # Validates against the full committed grid: any dropped shard, short
+      # shard, duplicated upload, malformed row or undeclared cell fails here
+      # rather than silently producing a smaller table downstream.
+      - name: Merge and validate
+        run: |
+          mkdir -p runs
+          python repro/merge_shards.py partA \
+            --shard-dir shards --pattern 'gate_partA-*.jsonl' \
+            --out runs/gate_partA.jsonl | tee runs/gate_partA.manifest.json
+
+      - name: Upload the merged record
+        uses: actions/upload-artifact@v4
+        with:
+          name: gate-partA-merged
+          path: runs/
+          retention-days: ${{ env.ARTIFACT_RETENTION_DAYS }}
+          if-no-files-found: error
+
+  # ── 6. deterministic merge + validation of part B ──────────────────────
+  merge-part-b:
+    name: merge + validate part B
+    needs: gate-part-b
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup-arena
+
+      - name: Download every part B shard
+        uses: actions/download-artifact@v5
+        with:
+          pattern: gate-partB-shard-*
+          merge-multiple: true
+          path: shards
+
+      - name: List what arrived
+        run: ls -l shards/
+
+      - name: Merge and validate
+        run: |
+          mkdir -p runs
+          python repro/merge_shards.py partB \
+            --shard-dir shards --pattern 'gate_partB-*.jsonl' \
+            --out runs/gate_partB.jsonl | tee runs/gate_partB.manifest.json
+
+      - name: Upload the merged record
+        uses: actions/upload-artifact@v4
+        with:
+          name: gate-partB-merged
+          path: runs/
+          retention-days: ${{ env.ARTIFACT_RETENTION_DAYS }}
+          if-no-files-found: error
+
+  # ── 7. imagine ablation, over the COMPLETE merged part A and part B ────
+  imagine-ablation:
+    name: imagine ablation
+    needs: [merge-part-a, merge-part-b]
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup-arena
+
+      - uses: actions/download-artifact@v5
+        with:
+          name: gate-partA-merged
+          path: runs
+      - uses: actions/download-artifact@v5
+        with:
+          name: gate-partB-merged
+          path: runs
+
+      - name: Confirm both complete records are present
+        run: |
+          wc -l runs/gate_partA.jsonl runs/gate_partB.jsonl
+          cat runs/gate_partA.manifest.json runs/gate_partB.manifest.json
+
+      - name: Run the imagine ablation
+        run: |
+          mkdir -p out
+          python repro/imagine_ablation.py --no-emit \
+            --parta runs/gate_partA.jsonl \
+            --partb runs/gate_partB.jsonl \
+            > out/imagine_ablation.jsonl 2> out/imagine_ablation.log
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: imagine-ablation
+          path: out/
+          retention-days: ${{ env.ARTIFACT_RETENTION_DAYS }}
+
+  # ── 8. propose ablation, over the COMPLETE merged part A ───────────────
+  propose-ablation:
+    name: propose ablation
+    needs: merge-part-a
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup-arena
+
+      - uses: actions/download-artifact@v5
+        with:
+          name: gate-partA-merged
+          path: runs
+
+      - name: Confirm the complete record is present
+        run: |
+          wc -l runs/gate_partA.jsonl
+          cat runs/gate_partA.manifest.json
+
+      - name: Run the propose ablation
+        run: |
+          mkdir -p out
+          python repro/propose_ablation.py --no-emit \
+            --parta runs/gate_partA.jsonl \
+            > out/propose_ablation.jsonl 2> out/propose_ablation.log
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: propose-ablation
+          path: out/
+          retention-days: ${{ env.ARTIFACT_RETENTION_DAYS }}

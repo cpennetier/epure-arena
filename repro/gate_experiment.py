@@ -228,7 +228,16 @@ def part_b(args) -> None:
         print(f"run folder: {folder}", file=sys.stderr)
 
 
-def main() -> None:
+def build_parser() -> argparse.ArgumentParser:
+    """The experiment's declared grid, as an argument parser.
+
+    This is the SINGLE source of truth for the published grid: the defaults
+    below are the committed scientific setting. It is exposed as a function
+    (rather than built inline in ``main``) so that downstream tooling — the
+    shard aggregator in ``repro/merge_shards.py`` — can derive the expected
+    cell grid from these same defaults instead of restating them, which would
+    be a second copy free to drift.
+    """
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("part", choices=("partA", "partB"))
     ap.add_argument("--worlds", default="backbone,mesh")
@@ -241,7 +250,11 @@ def main() -> None:
     ap.add_argument("--events-per-kind", type=int, default=2)
     ap.add_argument("--budgets", default="1,2,4")
     ap.add_argument("--no-emit", action="store_true")
-    args = ap.parse_args()
+    return ap
+
+
+def main() -> None:
+    args = build_parser().parse_args()
     (part_a if args.part == "partA" else part_b)(args)
 
 
