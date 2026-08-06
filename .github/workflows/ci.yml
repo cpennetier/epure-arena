@@ -1,40 +1,115 @@
 name: CI
+
+# The per-commit contract. Everything here is Python: Epure Arena owns the
+# arena layer and the experiments, and owns no compiled code. The Rust event
+# engine belongs to the `ephemeris-kernel` dependency and is tested in that
+# repository — this workflow's job is to prove the arena works against the
+# *published* Ephemeris boundary, not to re-test Ephemeris.
+#
+# The full paper reproduction is NOT here: it is scheduled and sharded in
+# .github/workflows/reproduce-paper.yml, because run whole it exceeds the
+# six-hour ceiling on a single hosted job.
+
 on:
   push: { branches: [main] }
   pull_request:
+  workflow_dispatch:
+  # Weekly, so dependency drift is caught even with no commits: the kernel
+  # pin is fixed but the transitive set is not, and this repository asserts
+  # byte-identity against committed tables. A new numpy or scikit-learn that
+  # moves a golden must surface as a failure, not as a silent divergence.
   schedule:
-    - cron: "0 4 * * 1"   # weekly reproduce-paper
+    - cron: "0 6 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# The implicit shell is `bash -e`, which does not set pipefail.
+defaults:
+  run:
+    shell: bash
+
 jobs:
   test:
+    name: test (py${{ matrix.python-version }})
     runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        # The supported range declared by pyproject (requires-python >=3.11).
+        python-version: ["3.11", "3.12"]
     steps:
       - uses: actions/checkout@v5
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: actions/setup-python@v6
-        with: { python-version: "3.12" }
-      - name: Rust suites
+
+      - uses: ./.github/actions/setup-arena
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # Named separately from the suite: when the dependency boundary breaks,
+      # this fails first and says so, instead of surfacing as 100+ errors.
+      - name: Ephemeris boundary (import + end-to-end arena run)
+        run: python repro/boundary_check.py
+
+      - name: Invariants (neutrality, dependency direction, self-containment)
         run: |
-          cargo test --no-default-features --manifest-path crates/epure-des/Cargo.toml --lib
-          cargo test --no-default-features --features arrow_only --manifest-path crates/epure-ledger/Cargo.toml
-          cargo test --no-default-features --features arrow_only --manifest-path crates/epure-fsm/Cargo.toml
-      - name: Python package
-        run: |
-          pip install maturin
-          pip install -e ".[oracle,dev]"
-      - name: Invariants (neutrality, dependency direction)
-        run: pytest tests/test_no_domain_vocabulary.py tests/test_dependency_direction.py -q
+          python -m pytest -q \
+            tests/test_no_domain_vocabulary.py \
+            tests/test_dependency_direction.py \
+            tests/test_no_internal_references.py
+
+      - name: Public API surface
+        run: python -m pytest tests/test_public_api.py -q
+
       - name: Core suite + golden worlds
-        run: pytest tests -q
+        run: python -m pytest tests -q
+
       - name: reproduce-smoke (byte-asserted)
         run: make reproduce-smoke
-  reproduce-paper:
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+
+  package:
+    name: package (build + install + import)
     runs-on: ubuntu-latest
-    timeout-minutes: 420
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5
-      - uses: dtolnay/rust-toolchain@stable
+
       - uses: actions/setup-python@v6
-        with: { python-version: "3.12" }
-      - run: pip install maturin && pip install -e ".[oracle,dev]"
-      - run: make reproduce-paper
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      # Needed to build the ephemeris-kernel dependency when the built
+      # distribution is installed into a clean environment below.
+      - name: Rust toolchain (to BUILD the ephemeris-kernel dependency)
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build the source distribution and wheel
+        run: |
+          python -m pip install --upgrade pip build
+          python -m build
+
+      - name: Show what was built
+        run: ls -l dist/
+
+      # A wheel that cannot be installed and imported from a clean
+      # environment is not a publishable package, whatever it builds to.
+      - name: Install the built wheel into a clean environment and import it
+        run: |
+          python -m venv "${RUNNER_TEMP}/wheel-check"
+          "${RUNNER_TEMP}/wheel-check/bin/python" -m pip install --upgrade pip
+          "${RUNNER_TEMP}/wheel-check/bin/python" -m pip install dist/*.whl
+          "${RUNNER_TEMP}/wheel-check/bin/python" - <<'PY'
+          import ephemeris
+          import epure_arena
+          from epure_arena import _engine
+          assert _engine.__name__.startswith("ephemeris"), _engine.__name__
+          print("installed wheel imports:", epure_arena.__file__)
+          print("engine from dependency :", _engine.__name__)
+          print("ephemeris resolved to  :", ephemeris.__file__)
+          PY
