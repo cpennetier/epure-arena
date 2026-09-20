@@ -21,3 +21,17 @@ __pycache__/
 
 # generated views of the committed ledgers (make_figures.py)
 experiments/coordination-frontier/figures/
+
+# Private local agent instructions, including when building source packages.
+.agent/
+.agents/
+.claude/
+.codex/
+AGENTS.md
+AGENTS.override.md
+CLAUDE.md
+CLAUDE.local.md
+AGENT_GLOBAL.md
+MACHINE.md
+PROMPTING.md
+CONTRACT.md
