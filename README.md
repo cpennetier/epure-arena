@@ -151,6 +151,11 @@ make reproduce-smoke
 
 `make reproduce-smoke` is the fast end-to-end anchor. It reruns committed cells and exits successfully only when deterministic fields match the golden tables.
 
+The `oracle` extra pins PuLP 3.3.2. PuLP 4 changes the variable-construction
+API used by the wait-pricing ILP; installing it with the current implementation
+fails before solving. HiGHS remains the certified solver backend. A PuLP upgrade
+must preserve the existing oracle tests and reproduction goldens.
+
 ## Run the artifact
 
 | Command | Purpose |
