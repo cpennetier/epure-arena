@@ -21,7 +21,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-oracle = ["pulp>=2.7", "scipy>=1.11", "highspy>=1.5"]  # highspy: the CERTIFIED MIP backend (CBC is untrustworthy on big-M lateness)
+# PuLP 4 removes the LpVariable(cat=...) API used by lattice/ilp_wait.py.
+# Keep the verified modeling API; highspy remains the certified MIP backend.
+oracle = ["pulp==3.3.2", "scipy>=1.11", "highspy>=1.5"]  # CBC is untrustworthy on big-M lateness
 dev = ["pytest>=7.0", "scikit-learn>=1.3"]
 
 # the kernel pin is a git direct reference; hatchling rejects it in
