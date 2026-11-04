@@ -14,12 +14,10 @@ on:
   push: { branches: [main] }
   pull_request:
   workflow_dispatch:
-  # Weekly, so dependency drift is caught even with no commits: the kernel
-  # pin is fixed but the transitive set is not, and this repository asserts
-  # byte-identity against committed tables. A new numpy or scikit-learn that
-  # moves a golden must surface as a failure, not as a silent divergence.
-  schedule:
-    - cron: "0 6 * * 1"
+  # No timer: CI runs when something changes. Dependency drift cannot happen
+  # on its own because every dependency is pinned: ci/constraints.txt (the
+  # Python set, resolved as of the last green run), the Rust toolchain and the
+  # Python versions below. Moving a pin is a commit, and that commit runs CI.
 
 permissions:
   contents: read
@@ -42,7 +40,7 @@ jobs:
       fail-fast: false
       matrix:
         # The supported range declared by pyproject (requires-python >=3.11).
-        python-version: ["3.11", "3.12"]
+        python-version: ["3.11.17", "3.12.15"]
     steps:
       - uses: actions/checkout@v5
 
@@ -80,7 +78,7 @@ jobs:
 
       - uses: actions/setup-python@v6
         with:
-          python-version: "3.12"
+          python-version: "3.12.15"
           cache: pip
           cache-dependency-path: pyproject.toml
 
