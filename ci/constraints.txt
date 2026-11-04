@@ -1,0 +1,50 @@
+cloudpickle==3.1.2
+    # via joblib
+colorama==0.4.6 ; sys_platform == 'win32'
+    # via pytest
+h3==4.5.0
+    # via -r /tmp/claude-epure-req.in
+highspy==1.15.1
+    # via -r /tmp/claude-epure-req.in
+iniconfig==2.3.1
+    # via pytest
+joblib==1.6.0
+    # via scikit-learn
+narwhals==2.28.0
+    # via scikit-learn
+numpy==2.4.6 ; python_full_version < '3.12'
+    # via
+    #   -r /tmp/claude-epure-req.in
+    #   highspy
+    #   scikit-learn
+    #   scipy
+numpy==2.5.4 ; python_full_version >= '3.12'
+    # via
+    #   -r /tmp/claude-epure-req.in
+    #   highspy
+    #   scikit-learn
+    #   scipy
+packaging==26.3
+    # via pytest
+pluggy==1.7.0
+    # via pytest
+pulp==3.3.2
+    # via -r /tmp/claude-epure-req.in
+pyarrow==26.0.0
+    # via -r /tmp/claude-epure-req.in
+pygments==2.21.0
+    # via pytest
+pytest==9.2.0
+    # via -r /tmp/claude-epure-req.in
+scikit-learn==1.9.1
+    # via -r /tmp/claude-epure-req.in
+scipy==1.17.1 ; python_full_version < '3.12'
+    # via
+    #   -r /tmp/claude-epure-req.in
+    #   scikit-learn
+scipy==1.18.1 ; python_full_version >= '3.12'
+    # via
+    #   -r /tmp/claude-epure-req.in
+    #   scikit-learn
+threadpoolctl==3.7.0
+    # via scikit-learn

@@ -16,8 +16,20 @@ name: reproduce-paper
 # missing cell, no undeclared cell, and the same row order.
 
 on:
-  schedule:
-    - cron: "0 4 * * 1"   # weekly, Monday 04:00 UTC
+  # No timer: the reproduction runs when something it depends on changes on
+  # main (or by hand). Its inputs are pinned (ci/constraints.txt, the Rust
+  # toolchain), so an unchanged repository cannot produce a different result.
+  push:
+    branches: [main]
+    paths:
+      - "python/**"
+      - "repro/**"
+      - "experiments/**"
+      - "data/**"
+      - "pyproject.toml"
+      - "ci/constraints.txt"
+      - ".github/workflows/reproduce-paper.yml"
+      - ".github/actions/setup-arena/**"
   workflow_dispatch:
 
 permissions:
